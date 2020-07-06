@@ -1,10 +1,6 @@
 package main
 
 import (
-	"api_template/auth"
-	"api_template/controllers"
-	"api_template/models"
-	"api_template/utils"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -13,6 +9,11 @@ import (
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/logopassapi/auth"
+	"github.com/logopassapi/controllers"
+	"github.com/logopassapi/models"
+	"github.com/logopassapi/utils"
 
 	"github.com/gorilla/mux"
 

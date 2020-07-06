@@ -7,10 +7,10 @@ package main
 */
 
 import (
-	"api_template/auth"
-	"api_template/controllers"
-	"api_template/models"
-	"api_template/utils"
+	"github.com/logopassapi/auth"
+	"github.com/logopassapi/controllers"
+	"github.com/logopassapi/models"
+	"github.com/logopassapi/utils"
 
 	"log"
 	"net/http"

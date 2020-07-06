@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"api_template/auth"
-	"api_template/models"
-	"api_template/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/logopassapi/auth"
+	"github.com/logopassapi/models"
+	"github.com/logopassapi/utils"
 
 	"github.com/gorilla/mux"
 )
