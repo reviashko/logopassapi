@@ -1,0 +1,6 @@
+{
+    "host":"smtp.mail.ru",
+    "email":"",
+    "password":"",
+    "mock_email":"test@mailinator.com"
+}

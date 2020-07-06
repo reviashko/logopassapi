@@ -1,0 +1,7 @@
+{
+    "AES256Key":"mysuperpupersecretkeywith32len00",
+    "SHA256Salt":"megaSalt",
+    "TokenTTL":60,
+    "PasswordEmailTTL":60,
+    "RestorePasswordURL":"http://localhost:3000/auth/changepassword/"
+}
