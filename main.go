@@ -1,18 +1,11 @@
 package main
 
-/*
-1. Добавить поддержку версии пакетов
-2. Роутер подогнать под REST
-3. Нужно бы еще middleware добавить с логированием
-*/
-
 import (
-	"github.com/logopassapi/auth"
-	"github.com/logopassapi/controllers"
-	"github.com/logopassapi/models"
-	"github.com/logopassapi/utils"
-
 	"log"
+	"logopassapi/auth"
+	"logopassapi/controllers"
+	"logopassapi/models"
+	"logopassapi/utils"
 	"net/http"
 
 	"github.com/tkanos/gonfig"

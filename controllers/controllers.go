@@ -3,13 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"logopassapi/auth"
+	"logopassapi/models"
+	"logopassapi/utils"
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/logopassapi/auth"
-	"github.com/logopassapi/models"
-	"github.com/logopassapi/utils"
 
 	"github.com/gorilla/mux"
 )
