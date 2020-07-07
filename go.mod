@@ -1,4 +1,4 @@
-module logopassapi
+module github.com/reviashko/logopassapi
 
 go 1.14
 

@@ -2,12 +2,13 @@ package main
 
 import (
 	"log"
-	"logopassapi/controllers"
 	"net/http"
+
+	"github.com/reviashko/logopassapi/controller"
 )
 
 func main() {
 
-	controller := controllers.Init("config/db.json", "config/crypto.json", "config/smtp.json")
+	controller := controller.NewController("config/db.json", "config/crypto.json", "config/smtp.json")
 	log.Fatal(http.ListenAndServe(":8080", controller.GetRouter()))
 }

@@ -5,14 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"logopassapi/auth"
-	"logopassapi/controllers"
-	"logopassapi/models"
-	"logopassapi/utils"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/reviashko/logopassapi/auth"
+	"github.com/reviashko/logopassapi/controller"
+	"github.com/reviashko/logopassapi/models"
+	"github.com/reviashko/logopassapi/utils"
 
 	"github.com/gorilla/mux"
 
@@ -57,7 +58,7 @@ func (mdb *mockDB) SaveUser(userData *models.UserData) (int, pq.ErrorCode, error
 	return 1, errorCode, nil
 }
 
-func InitControllers(mdb *mockDB) controllers.Controllers {
+func InitController(mdb *mockDB) controller.Controller {
 
 	cryptoData := auth.CryptoData{}
 	if gonfig.GetConf("config/crypto.json", &cryptoData) != nil {
@@ -69,26 +70,13 @@ func InitControllers(mdb *mockDB) controllers.Controllers {
 		log.Panic("load smtp confg error")
 	}
 
-	return controllers.Controllers{Db: mdb, Crypto: cryptoData, SMTP: smtpData}
+	return controller.Controller{Db: mdb, Crypto: cryptoData, SMTP: smtpData}
 }
 
 //TestGetTestDataByTokenHandler func
 func TestGetTestDataByTokenHandler(t *testing.T) {
 
-	/*
-		cryptoData := auth.CryptoData{}
-		if gonfig.GetConf("config/crypto.json", &cryptoData) != nil {
-			log.Panic("load crypto confg error")
-		}
-
-		smtpData := utils.SMTPData{}
-		if gonfig.GetConf("config/smtp.json", &smtpData) != nil {
-			log.Panic("load smtp confg error")
-		}
-
-		controller := controllers.Controllers{Db: &mockDB{}, Crypto: cryptoData, SMTP: smtpData}
-	*/
-	controller := InitControllers(&mockDB{})
+	controller := InitController(&mockDB{})
 
 	rec := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/gettestdatabytoken/", nil)
@@ -107,7 +95,7 @@ func TestGetTestDataByTokenHandler(t *testing.T) {
 //TestGetAuthTokenHandler func
 func TestGetAuthTokenHandler(t *testing.T) {
 
-	controller := InitControllers(&mockDB{})
+	controller := InitController(&mockDB{})
 
 	rec := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/getauthtoken/", bytes.NewReader([]byte(`{"login": "`+controller.SMTP.MockEmail+`", "password": "test"}`)))
@@ -149,7 +137,7 @@ func TestGetAuthTokenHandler(t *testing.T) {
 //TestRegistrationHandler func
 func TestRegistrationHandler(t *testing.T) {
 
-	controller := InitControllers(&mockDB{})
+	controller := InitController(&mockDB{})
 
 	rec := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/registration/", bytes.NewReader([]byte(`{"email": "`+controller.SMTP.MockEmail+`", "first_name": "test", "is_active": true}`)))
@@ -190,7 +178,7 @@ func TestRegistrationHandler(t *testing.T) {
 //TestSendRestorePasswordEmailHandler func
 func TestSendRestorePasswordEmailHandler(t *testing.T) {
 
-	controller := InitControllers(&mockDB{})
+	controller := InitController(&mockDB{})
 
 	rec := httptest.NewRecorder()
 	req, _ := http.NewRequest("POST", "/getpasswordrestoreemail/", bytes.NewReader([]byte(`{"email": "`+controller.SMTP.MockEmail+`"}`)))
@@ -212,7 +200,7 @@ func TestSendRestorePasswordEmailHandler(t *testing.T) {
 //TestSendRestorePasswordEmailHandler func
 func TestChangePasswordHandler(t *testing.T) {
 
-	controller := InitControllers(&mockDB{})
+	controller := InitController(&mockDB{})
 
 	linkData, err := controller.Crypto.EncryptTextAES256Base64(fmt.Sprintf(`{"email":"%s", "ttl":%d}`, controller.SMTP.MockEmail, controller.Crypto.PasswordEmailTTL))
 	if err != nil {
