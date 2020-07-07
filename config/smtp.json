@@ -1,6 +1,0 @@
-{
-    "host":"smtp.mail.ru",
-    "email":"testomailer@bk.ru",
-    "password":"superpassword25",
-    "mock_email":"test@mailinator.com"
-}
