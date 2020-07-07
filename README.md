@@ -1,4 +1,4 @@
-Ligthweight API template "logopassapi" for users login/registration/restore password methods
+Ligthweight API template "logopassapi" with users login/registration/restore password methods
 
 API using PG database which you need to install before using API - database sql script found in db folder.
 Database setting stored in config(db json):
@@ -21,4 +21,11 @@ For token protection API using AES256 encryption algorithm. Please do not use de
     "PasswordEmailTTL":60 --> ttl for restore password link. Set in seconds
     "RestorePasswordURL":"http://localhost:3000/auth/changepassword/" --> change password link, which sending via email 
 
-GetTestDataByTokenHandler method is an example of how to send data from API throught token authorization.
+
+API controller include methods:
+    GetAuthTokenHandler --> using for user authtorization via login / password. It give encrypted token in case of successfull login result
+	RegistrationHandler --> using for user registration. It give encrypted token in case of successfull registration
+    SendRestorePasswordEmailHandler --> send emal with change password link to user in case of such email exists in database
+    ChangePasswordHandler --> change user password automaticaly in case of valid token in restore password link
+
+For customization reason you have opportunity to add your own logic afterward checking authtorization token without editing of logopassapi project. See example in example folder.

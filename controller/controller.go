@@ -49,8 +49,8 @@ func NewController(dbconfig string, cryptoconfig string, smtpconfig string) Cont
 	return Controller{Db: db, Crypto: cryptoData, SMTP: smtpData}
 }
 
-//GetRouter func
-func (c *Controller) GetRouter() *mux.Router {
+//NewRouter func
+func (c *Controller) NewRouter() *mux.Router {
 
 	router := mux.NewRouter()
 
@@ -58,8 +58,6 @@ func (c *Controller) GetRouter() *mux.Router {
 	router.HandleFunc("/getauthtoken/", c.GetAuthTokenHandler).Methods("POST")
 	//registration method -tested
 	router.HandleFunc("/registration/", c.RegistrationHandler).Methods("POST")
-	//get an data with token example -tested
-	router.HandleFunc("/gettestdatabytoken/", c.GetTestDataByTokenHandler).Methods("POST", "OPTIONS")
 	//forgot password method (sending special restore link) -tested
 	router.HandleFunc("/getpasswordrestoreemail/", c.SendRestorePasswordEmailHandler).Methods("POST")
 	//change password method -tested
@@ -328,37 +326,4 @@ func (c *Controller) GetAuthTokenHandler(w http.ResponseWriter, r *http.Request)
 			""))
 	}
 
-}
-
-//GetTestDataByTokenHandler function
-func (c *Controller) GetTestDataByTokenHandler(w http.ResponseWriter, r *http.Request) {
-
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	if r.Method == "OPTIONS" {
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		return
-	}
-
-	checked, err := c.Crypto.CheckAuthToken(r.Header.Get("Authorization"))
-	if err != nil {
-		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
-			false,
-			"Token validation error!",
-			""))
-		return
-	}
-
-	if !checked {
-		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
-			false,
-			"Невалидный токен!",
-			""))
-		return
-	}
-
-	fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
-		true,
-		"",
-		`{"param":"value"}`))
 }

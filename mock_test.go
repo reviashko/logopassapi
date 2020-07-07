@@ -12,6 +12,7 @@ import (
 
 	"github.com/reviashko/logopassapi/auth"
 	"github.com/reviashko/logopassapi/controller"
+	"github.com/reviashko/logopassapi/example"
 	"github.com/reviashko/logopassapi/models"
 	"github.com/reviashko/logopassapi/utils"
 
@@ -76,17 +77,18 @@ func InitController(mdb *mockDB) controller.Controller {
 //TestGetTestDataByTokenHandler function
 func TestGetTestDataByTokenHandler(t *testing.T) {
 
-	controller := InitController(&mockDB{})
+	cntrl := InitController(&mockDB{})
 
 	rec := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/gettestdatabytoken/", nil)
+	req, _ := http.NewRequest("POST", "/gettestdatabytoken/", bytes.NewReader([]byte(`{"name": "test", "text": "test"}`)))
 
-	token, _ := controller.Crypto.EncryptTextAES256Base64(controller.Crypto.GetTokenJSON(1))
+	token, _ := cntrl.Crypto.EncryptTextAES256Base64(cntrl.Crypto.GetTokenJSON(1))
 	req.Header.Add("Authorization", token)
 
-	http.HandlerFunc(controller.GetTestDataByTokenHandler).ServeHTTP(rec, req)
+	externalCallExample := controller.ExternalCall{Cntrl: cntrl, ExternalLogic: &example.ExternalLogicExample{}}
+	http.HandlerFunc(externalCallExample.CheckTokenAndDoFunc).ServeHTTP(rec, req)
 
-	expected := `{"accepted":true, "token":"", "reason":"", "data":"{"param":"value"}"}`
+	expected := `{"accepted":true, "token":"", "reason":"", "data":"{"result":"ok"}"}`
 	if expected != rec.Body.String() {
 		t.Errorf("\n...expected = %v\n...obtained = %v", expected, rec.Body.String())
 	}
