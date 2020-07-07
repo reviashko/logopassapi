@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-//GetNewPassword func
+//GetNewPassword function
 func GetNewPassword() (string, error) {
 	guidBytes := make([]byte, 16)
 	_, err := rand.Read(guidBytes)

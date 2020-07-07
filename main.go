@@ -9,6 +9,6 @@ import (
 
 func main() {
 
-	controller := controller.NewController("config/db.json", "config/crypto.json", "config/smtp.json")
-	log.Fatal(http.ListenAndServe(":8080", controller.GetRouter()))
+	cntrl := controller.NewController("config/db.json", "config/crypto.json", "config/smtp.json")
+	log.Fatal(http.ListenAndServe(":8080", cntrl.GetRouter()))
 }

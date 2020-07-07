@@ -9,7 +9,7 @@ type EmailTemplate struct {
 	UserID int `json:"user_id" db:"user_id"`
 }
 
-// GetUserByAuth2 method
+// GetUserByAuth22 method
 func (db *DB) GetUserByAuth2(email string, pswdHashB []byte) (*UserData, pq.ErrorCode, error) {
 
 	var errorCode pq.ErrorCode

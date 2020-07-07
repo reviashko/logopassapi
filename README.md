@@ -21,4 +21,4 @@ For token protection API using AES256 encryption algorithm. Please do not use de
     "PasswordEmailTTL":60 --> ttl for restore password link. Set in seconds
     "RestorePasswordURL":"http://localhost:3000/auth/changepassword/" --> change password link, which sending via email 
 
-GetTestDataByTokenHandler method is an example of how to send data from API throught token authorization
+GetTestDataByTokenHandler method is an example of how to send data from API throught token authorization.

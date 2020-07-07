@@ -85,6 +85,7 @@ RETURN QUERY
 END;
 $BODY$;
 
+
 CREATE SEQUENCE users.user_id
     INCREMENT 1
     START 1

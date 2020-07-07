@@ -8,7 +8,7 @@ import (
 	"regexp"
 )
 
-//GetJSONAnswer func
+//GetJSONAnswer function
 func GetJSONAnswer(token string, accepted bool, reason string, data string) string {
 	return fmt.Sprintf(`{"accepted":%t, "token":"%s", "reason":"%s", "data":"%s"}`, accepted, token, reason, data)
 }

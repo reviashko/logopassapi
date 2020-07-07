@@ -4,7 +4,7 @@ import (
 	"github.com/lib/pq"
 )
 
-// UserData structure
+// UserData struct
 type UserData struct {
 	UserID    int    `json:"user_id" db:"user_id"`
 	IsActive  bool   `json:"is_active" db:"is_active"`

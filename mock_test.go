@@ -73,7 +73,7 @@ func InitController(mdb *mockDB) controller.Controller {
 	return controller.Controller{Db: mdb, Crypto: cryptoData, SMTP: smtpData}
 }
 
-//TestGetTestDataByTokenHandler func
+//TestGetTestDataByTokenHandler function
 func TestGetTestDataByTokenHandler(t *testing.T) {
 
 	controller := InitController(&mockDB{})

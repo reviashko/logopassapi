@@ -330,7 +330,7 @@ func (c *Controller) GetAuthTokenHandler(w http.ResponseWriter, r *http.Request)
 
 }
 
-//GetTestDataByTokenHandler func
+//GetTestDataByTokenHandler function
 func (c *Controller) GetTestDataByTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")

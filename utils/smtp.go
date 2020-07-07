@@ -12,15 +12,6 @@ type SMTPData struct {
 	MockEmail string `json:"mock_email"`
 }
 
-/*
-message := `To: "Some User" <someuser@example.com>
-From: "Other User" <otheruser@example.com>
-Subject: Testing Email From Go!!
-
-This is the message we are sending. That's it!
-`
-*/
-
 //SendEmail func
 func (s *SMTPData) SendEmail(to string, msg string) error {
 

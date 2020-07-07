@@ -19,7 +19,7 @@ type ConnectionData struct {
 	Password string
 }
 
-//ToString funct
+//ToString function
 func (c *ConnectionData) ToString() string {
 	return fmt.Sprintf("host=%s port=%v dbname=%s user=%s password=%s sslmode=disable", c.Host, strconv.Itoa(c.Port), c.Dbname, c.User, c.Password)
 }

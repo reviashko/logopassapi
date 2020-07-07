@@ -7,7 +7,7 @@ type Token struct {
 	Email  string `json:"email"`
 }
 
-//LogoPassData struct for login/password sending
+//LogoPassData struct for login / password sending
 type LogoPassData struct {
 	Password string `json:"password"`
 	Login    string `json:"login"`

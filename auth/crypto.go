@@ -54,6 +54,7 @@ func (c *CryptoData) EncryptTextAES256Base64(textString string) (string, error) 
 	if len(c.AES256Key) != 32 {
 		panic("too short key!")
 	}
+
 	text := []byte(textString)
 	key := []byte(c.AES256Key)
 
