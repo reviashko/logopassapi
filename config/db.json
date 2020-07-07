@@ -1,7 +1,0 @@
-{
-    "host":"postgres76.1gb.ru",
-    "port":5432,
-    "dbname":"xgb_lms",
-    "user":"xgb_lms",
-    "password":"8a5abfcarty"
-}
