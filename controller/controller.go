@@ -3,7 +3,6 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -13,7 +12,6 @@ import (
 	"github.com/reviashko/logopassapi/utils"
 
 	"github.com/gorilla/mux"
-	"github.com/tkanos/gonfig"
 )
 
 //Controller struct
@@ -21,32 +19,6 @@ type Controller struct {
 	Db     models.Datastore
 	Crypto auth.CryptoData
 	SMTP   utils.SMTPData
-}
-
-//NewController func
-func NewController(dbconfig string, cryptoconfig string, smtpconfig string) Controller {
-
-	connectionData := models.ConnectionData{}
-	if gonfig.GetConf("config/db.json", &connectionData) != nil {
-		log.Panic("load db confg error")
-	}
-
-	cryptoData := auth.CryptoData{}
-	if gonfig.GetConf("config/crypto.json", &cryptoData) != nil {
-		log.Panic("load crypto confg error")
-	}
-
-	smtpData := utils.SMTPData{}
-	if gonfig.GetConf("config/smtp.json", &smtpData) != nil {
-		log.Panic("load smtp confg error")
-	}
-
-	db, err := models.InitDB(connectionData.ToString())
-	if err != nil {
-		log.Panic(err)
-	}
-
-	return Controller{Db: db, Crypto: cryptoData, SMTP: smtpData}
 }
 
 //NewRouter func

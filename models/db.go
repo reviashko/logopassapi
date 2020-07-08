@@ -38,9 +38,9 @@ type DB struct {
 }
 
 // InitDB function
-func InitDB(connString string) (*DB, error) {
+func InitDB(connectionData ConnectionData) (*DB, error) {
 
-	db, err := sqlx.Connect("postgres", connString)
+	db, err := sqlx.Connect("postgres", connectionData.ToString())
 	if err != nil {
 		log.Fatalln(err)
 		return nil, err
