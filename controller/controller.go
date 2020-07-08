@@ -21,6 +21,11 @@ type Controller struct {
 	SMTP   utils.SMTPData
 }
 
+//NewController func
+func NewController(db models.Datastore, cryptoData auth.CryptoData, smtpData utils.SMTPData) Controller {
+	return Controller{Db: db, Crypto: cryptoData, SMTP: smtpData}
+}
+
 //NewRouter func
 func (c *Controller) NewRouter() *mux.Router {
 

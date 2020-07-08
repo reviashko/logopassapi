@@ -34,7 +34,7 @@ func main() {
 		log.Panic("load smtp confg error")
 	}
 
-	cntrl := controller.Controller{Db: db, Crypto: cryptoData, SMTP: smtpData}
+	cntrl := controller.NewController(db, cryptoData, smtpData)
 	router := cntrl.NewRouter()
 
 	//Example. Apply external logic after authtorization token check
