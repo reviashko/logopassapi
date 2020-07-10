@@ -9,8 +9,12 @@ import (
 )
 
 //GetJSONAnswer function
-func GetJSONAnswer(token string, accepted bool, reason string, data string) string {
-	return fmt.Sprintf(`{"accepted":%t, "token":"%s", "reason":"%s", "data":"%s"}`, accepted, token, reason, data)
+func GetJSONAnswer(token string, accepted bool, reason string, jsonData string) string {
+	qv := `"`
+	if len(jsonData) > 0 {
+		qv = ``
+	}
+	return fmt.Sprintf(`{"accepted":%t, "token":"%s", "reason":"%s", "data":%s%s%s}`, accepted, token, reason, qv, jsonData, qv)
 }
 
 //ConvertBody2JSON func

@@ -5,12 +5,13 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/reviashko/logopassapi/auth"
 	"github.com/reviashko/logopassapi/utils"
 )
 
 //ExternalLogic interface
 type ExternalLogic interface {
-	GetResult(io.ReadCloser) (string, error)
+	GetResult(io.ReadCloser, auth.Token, string) (string, error)
 }
 
 //ExternalCall struct
@@ -23,13 +24,14 @@ type ExternalCall struct {
 func (ec *ExternalCall) CheckTokenAndDoFunc(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		return
 	}
 
-	checked, err := ec.Cntrl.Crypto.CheckAuthToken(r.Header.Get("Authorization"))
+	checked, token, err := ec.Cntrl.Crypto.CheckAuthToken(r.Header.Get("Authorization"))
 	if err != nil {
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
@@ -46,10 +48,10 @@ func (ec *ExternalCall) CheckTokenAndDoFunc(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	data, err := ec.ExternalLogic.GetResult(r.Body)
+	data, err := ec.ExternalLogic.GetResult(r.Body, token, r.Method)
 	if err != nil {
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
-			false,
+			true,
 			"Ошибка обработки данных!",
 			""))
 		return

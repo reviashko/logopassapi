@@ -88,7 +88,7 @@ func TestGetTestDataByTokenHandler(t *testing.T) {
 	externalCallExample := controller.ExternalCall{Cntrl: cntrl, ExternalLogic: &example.ExternalLogicExample{}}
 	http.HandlerFunc(externalCallExample.CheckTokenAndDoFunc).ServeHTTP(rec, req)
 
-	expected := `{"accepted":true, "token":"", "reason":"", "data":"{"result":"ok"}"}`
+	expected := `{"accepted":true, "token":"", "reason":"", "data":{"result":"ok"}}`
 	if expected != rec.Body.String() {
 		t.Errorf("\n...expected = %v\n...obtained = %v", expected, rec.Body.String())
 	}

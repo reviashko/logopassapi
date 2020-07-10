@@ -28,17 +28,17 @@ func (c *CryptoData) GetTokenJSON(userID int) string {
 }
 
 //CheckAuthToken func
-func (c *CryptoData) CheckAuthToken(authHeaderValue string) (bool, error) {
+func (c *CryptoData) CheckAuthToken(authHeaderValue string) (bool, Token, error) {
 
 	tokenJSON, _ := c.DecryptTextAES256(strings.ReplaceAll(authHeaderValue, `"`, ""))
 
 	var token Token
 	err := json.Unmarshal([]byte(tokenJSON), &token)
 	if err != nil {
-		return false, err
+		return false, token, err
 	}
 
-	return (token.TTL-time.Now().Unix() > 0), nil
+	return (token.TTL-time.Now().Unix() > 0), token, err
 }
 
 //GetSHA256Bytes func
