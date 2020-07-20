@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/reviashko/logopassapi/auth"
@@ -11,7 +10,7 @@ import (
 
 //ExternalLogic interface
 type ExternalLogic interface {
-	GetResult(io.ReadCloser, auth.Token, string) (string, error)
+	GetResult(*http.Request, auth.Token) (string, error)
 }
 
 //ExternalCall struct
@@ -48,7 +47,7 @@ func (ec *ExternalCall) CheckTokenAndDoFunc(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	data, err := ec.ExternalLogic.GetResult(r.Body, token, r.Method)
+	data, err := ec.ExternalLogic.GetResult(r, token)
 	if err != nil {
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			true,

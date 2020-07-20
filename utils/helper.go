@@ -8,7 +8,25 @@ import (
 	"regexp"
 )
 
-//GetJSONAnswer function
+//SortedIntInsert func
+func SortedIntInsert(arr []int, val int, prevSearchIndex int) []int {
+	//i := sort.SearchInts(arr, val)
+	arr = append(arr, 0)
+	copy(arr[prevSearchIndex+1:], arr[prevSearchIndex:])
+	arr[prevSearchIndex] = val
+	return arr
+}
+
+//SortedStringInsert func
+func SortedStringInsert(arr []string, val string, prevSearchIndex int) []string {
+	//i := sort.SearchStrings(arr, val)
+	arr = append(arr, "")
+	copy(arr[prevSearchIndex+1:], arr[prevSearchIndex:])
+	arr[prevSearchIndex] = val
+	return arr
+}
+
+//GetJSONAnswer func
 func GetJSONAnswer(token string, accepted bool, reason string, jsonData string) string {
 	qv := `"`
 	if len(jsonData) > 0 {

@@ -1,7 +1,8 @@
 package example
 
 import (
-	"io"
+	"errors"
+	"net/http"
 
 	"github.com/reviashko/logopassapi/auth"
 
@@ -15,15 +16,15 @@ type ExternalLogicExample struct {
 }
 
 //GetResult func
-func (ele *ExternalLogicExample) GetResult(requestBody io.ReadCloser, token auth.Token, httpMethod string) (string, error) {
+func (ele *ExternalLogicExample) GetResult(request *http.Request, token auth.Token) (string, error) {
 	var obj ExternalLogicExample
-	err := utils.ConvertBody2JSON(requestBody, &obj)
+	err := utils.ConvertBody2JSON(request.Body, &obj)
 	if err != nil {
 		return "", err
 	}
 
 	if obj.Name != "test" || token.UserID != 1 {
-		return `{"result":"error"}`, nil
+		return `{"result":"error"}`, errors.New("wrong user")
 	}
 
 	return `{"result":"ok"}`, nil

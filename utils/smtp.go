@@ -15,9 +15,23 @@ type SMTPData struct {
 //SendEmail func
 func (s *SMTPData) SendEmail(to string, msg string) error {
 
-	auth := smtp.PlainAuth("", s.Email, s.Password, s.Host)
+	if err := smtp.SendMail(s.Host+":25", s.GetAuth(), s.Email, []string{to}, []byte(msg)); err != nil {
+		return err
+	}
 
-	if err := smtp.SendMail(s.Host+":25", auth, s.Email, []string{to}, []byte(msg)); err != nil {
+	return nil
+}
+
+//GetAuth func
+func (s *SMTPData) GetAuth() smtp.Auth {
+
+	return smtp.PlainAuth("", s.Email, s.Password, s.Host)
+}
+
+//SendEmailWithAuth func
+func (s *SMTPData) SendEmailWithAuth(auth smtp.Auth, msg []byte, to string) error {
+
+	if err := smtp.SendMail(s.Host+":25", auth, s.Email, []string{to}, msg); err != nil {
 		return err
 	}
 

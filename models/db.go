@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
@@ -45,6 +46,11 @@ func InitDB(connectionData ConnectionData) (*DB, error) {
 		log.Fatalln(err)
 		return nil, err
 	}
+
+	//connection pool default settings
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(25)
+	db.SetConnMaxLifetime(5 * time.Minute)
 
 	if err = db.Ping(); err != nil {
 		log.Panic(err)
