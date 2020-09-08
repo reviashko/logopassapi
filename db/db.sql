@@ -1,5 +1,5 @@
 
-CREATE SCHEMA users
+CREATE SCHEMA users;
 
 CREATE TABLE users.users(
 user_id int not null,
@@ -8,11 +8,11 @@ first_name varchar(50),
 last_name varchar(50),
 email varchar(50) not null,
 pswd_hash_bytes bytea not null
-)
+);
 
-ALTER TABLE users.users ADD CONSTRAINT PK_users PRIMARY KEY(user_id)
+ALTER TABLE users.users ADD CONSTRAINT PK_users PRIMARY KEY(user_id);
 
-CREATE INDEX ON users.users(email)
+CREATE INDEX ON users.users(email);
 
 CREATE OR REPLACE FUNCTION users.user_getByEmail(
 	_email varchar(50))
@@ -151,3 +151,7 @@ RETURN QUERY
 		
 END;
 $BODY$;
+
+GRANT USAGE ON SCHEMA users TO your_login;
+GRANT USAGE ON SEQUENCE users.user_id TO your_login;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE users.users TO your_login;

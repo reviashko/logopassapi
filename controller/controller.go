@@ -119,11 +119,12 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 
 		err = c.SMTP.SendEmail(userData.Email, `Subject: Ваш пароль\n `+password)
 		if err != nil {
-			fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
-				false,
-				err.Error(),
-				""))
-			return
+			//fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+			//	false,
+			//	err.Error(),
+			//	""))
+			//return
+			//TODO: some logs here
 		}
 
 		token, _ := c.Crypto.EncryptTextAES256Base64(c.Crypto.GetTokenJSON(userID))
@@ -177,11 +178,12 @@ func (c *Controller) SendRestorePasswordEmailHandler(w http.ResponseWriter, r *h
 
 	err = c.SMTP.SendEmail(tokenItem.Email, `Subject: Смена пароля: `+c.Crypto.RestorePasswordURL+linkData)
 	if err != nil {
-		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
-			false,
-			"EMail link error!",
-			""))
-		return
+		//fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+		//	false,
+		//	"EMail link error!",
+		//	""))
+		//return
+		//TODO: some logs here
 	}
 
 	fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
@@ -241,11 +243,12 @@ func (c *Controller) RegistrationHandler(w http.ResponseWriter, r *http.Request)
 
 		err = c.SMTP.SendEmail(userData.Email, `Subject: Ваш пароль\n`+password)
 		if err != nil {
-			fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
-				false,
-				err.Error(),
-				""))
-			return
+			//fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+			//	false,
+			//	err.Error(),
+			//	""))
+			//return
+			//TODO: logs here
 		}
 
 		token, _ := c.Crypto.EncryptTextAES256Base64(c.Crypto.GetTokenJSON(userID))
