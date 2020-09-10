@@ -1,6 +1,8 @@
 package models
 
 import (
+	"log"
+
 	"github.com/lib/pq"
 )
 
@@ -22,6 +24,8 @@ func (db *DB) GetUserByAuth(email string, pswdHashB []byte) (*UserData, pq.Error
 	rows, err := db.Queryx("SELECT user_id, is_active, first_name, last_name, email from users.user_getByAuth($1, $2)", email, pswdHashB)
 	if err != nil {
 		if err, ok := err.(*pq.Error); ok {
+
+			log.Println(err.Error())
 			errorCode = err.Code
 		}
 		return new(UserData), errorCode, err
@@ -34,6 +38,8 @@ func (db *DB) GetUserByAuth(email string, pswdHashB []byte) (*UserData, pq.Error
 		userData := new(UserData)
 		err = rows.StructScan(&userData)
 		if err != nil {
+
+			log.Println(err.Error())
 			return new(UserData), errorCode, err
 		}
 		userList = append(userList, userData)
@@ -54,6 +60,8 @@ func (db *DB) GetUserByEmail(email string) (*UserData, pq.ErrorCode, error) {
 	rows, err := db.Queryx("SELECT user_id, is_active, first_name, last_name, email from users.user_getByEmail($1)", email)
 	if err != nil {
 		if err, ok := err.(*pq.Error); ok {
+
+			log.Println(err.Error())
 			errorCode = err.Code
 		}
 		return nil, errorCode, err
@@ -66,6 +74,8 @@ func (db *DB) GetUserByEmail(email string) (*UserData, pq.ErrorCode, error) {
 		userData := new(UserData)
 		err = rows.StructScan(&userData)
 		if err != nil {
+
+			log.Println(err.Error())
 			return nil, errorCode, err
 		}
 		userList = append(userList, userData)
@@ -84,6 +94,8 @@ func (db *DB) GetUser(userID int) (*UserData, pq.ErrorCode, error) {
 
 	rows, err := db.Queryx("SELECT user_id, is_active, first_name, last_name, email from users.user_get($1)", userID)
 	if err != nil {
+
+		log.Println(err.Error())
 		if err, ok := err.(*pq.Error); ok {
 			errorCode = err.Code
 		}
@@ -97,6 +109,8 @@ func (db *DB) GetUser(userID int) (*UserData, pq.ErrorCode, error) {
 		userData := new(UserData)
 		err = rows.StructScan(&userData)
 		if err != nil {
+
+			log.Println(err.Error())
 			return nil, errorCode, err
 		}
 		userList = append(userList, userData)
@@ -115,6 +129,8 @@ func (db *DB) SaveUser(userData *UserData) (int, pq.ErrorCode, error) {
 
 	rows, err := db.Queryx("select user_id from users.user_save($1, $2, $3, $4, $5, $6)", userData.UserID, userData.IsActive, userData.FirstName, userData.LastName, userData.Email, userData.PswdHashB)
 	if err != nil {
+
+		log.Println(err.Error())
 		if err, ok := err.(*pq.Error); ok {
 			errorCode = err.Code
 		}
@@ -128,6 +144,8 @@ func (db *DB) SaveUser(userData *UserData) (int, pq.ErrorCode, error) {
 		uData := new(UserData)
 		err = rows.StructScan(&uData)
 		if err != nil {
+
+			log.Println(err.Error())
 			return 0, errorCode, err
 		}
 		userList = append(userList, uData)

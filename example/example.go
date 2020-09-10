@@ -2,6 +2,7 @@ package example
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/reviashko/logopassapi/auth"
@@ -20,6 +21,8 @@ func (ele *ExternalLogicExample) GetResult(request *http.Request, token auth.Tok
 	var obj ExternalLogicExample
 	err := utils.ConvertBody2JSON(request.Body, &obj)
 	if err != nil {
+
+		log.Println(err.Error())
 		return "", err
 	}
 

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/reviashko/logopassapi/auth"
@@ -32,6 +33,8 @@ func (ec *ExternalCall) CheckTokenAndDoFunc(w http.ResponseWriter, r *http.Reque
 
 	checked, token, err := ec.Cntrl.Crypto.CheckAuthToken(r.Header.Get("Authorization"))
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Token validation error!",
@@ -49,6 +52,8 @@ func (ec *ExternalCall) CheckTokenAndDoFunc(w http.ResponseWriter, r *http.Reque
 
 	data, err := ec.ExternalLogic.GetResult(r, token)
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			true,
 			"Ошибка обработки данных!",

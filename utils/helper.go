@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"regexp"
 )
 
@@ -39,11 +40,15 @@ func GetJSONAnswer(token string, accepted bool, reason string, jsonData string) 
 func ConvertBody2JSON(data io.Reader, v interface{}) error {
 	body, err := ioutil.ReadAll(data)
 	if err != nil {
+
+		log.Println(err.Error())
 		return err
 	}
 
 	err = json.Unmarshal([]byte(string(body)), v)
 	if err != nil {
+
+		log.Println(err.Error())
 		return err
 	}
 

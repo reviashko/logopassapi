@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"strings"
 	"time"
 )
@@ -35,6 +36,8 @@ func (c *CryptoData) CheckAuthToken(authHeaderValue string) (bool, Token, error)
 	var token Token
 	err := json.Unmarshal([]byte(tokenJSON), &token)
 	if err != nil {
+
+		log.Println(err.Error())
 		return false, token, err
 	}
 
@@ -60,16 +63,22 @@ func (c *CryptoData) EncryptTextAES256Base64(textString string) (string, error) 
 
 	cp, err := aes.NewCipher(key)
 	if err != nil {
+
+		log.Println(err.Error())
 		return "", err
 	}
 
 	gcm, err := cipher.NewGCM(cp)
 	if err != nil {
+
+		log.Println(err.Error())
 		return "", err
 	}
 
 	nonce := make([]byte, gcm.NonceSize())
 	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+
+		log.Println(err.Error())
 		return "", err
 	}
 
@@ -85,27 +94,37 @@ func (c *CryptoData) DecryptTextAES256(encryptedBase64 string) (string, error) {
 
 	ciphertext, err := b64.RawURLEncoding.DecodeString(encryptedBase64) //[]byte(encryptedText)
 	if err != nil {
+
+		log.Println(err.Error())
 		return "", err
 	}
 
 	cp, err := aes.NewCipher(key)
 	if err != nil {
+
+		log.Println(err.Error())
 		return "", err
 	}
 
 	gcm, err := cipher.NewGCM(cp)
 	if err != nil {
+
+		log.Println(err.Error())
 		return "", nil
 	}
 
 	nonceSize := gcm.NonceSize()
 	if len(ciphertext) < nonceSize {
+
+		log.Println(err.Error())
 		return "", nil
 	}
 
 	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
 	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
+
+		log.Println(err.Error())
 		return "", nil
 	}
 

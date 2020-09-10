@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -61,6 +62,8 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 
 	tokenJSON, err := c.Crypto.DecryptTextAES256(linkData)
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Token decryption error!",
@@ -71,6 +74,8 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 	var token auth.Token
 	err = json.Unmarshal([]byte(tokenJSON), &token)
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Некорректная ссылка!",
@@ -88,6 +93,8 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 
 	userData, _, err := c.Db.GetUserByEmail(token.Email)
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Некорректный email!",
@@ -97,6 +104,8 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 
 	password, err := auth.GetNewPassword()
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Password generation error!",
@@ -108,6 +117,8 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 
 	userID, _, err := c.Db.SaveUser(userData)
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Save new password error!",
@@ -119,6 +130,8 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 
 		err = c.SMTP.SendEmail(userData.Email, `Subject: Ваш пароль\n `+password)
 		if err != nil {
+
+			log.Println(err.Error())
 			//fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			//	false,
 			//	err.Error(),
@@ -151,6 +164,8 @@ func (c *Controller) SendRestorePasswordEmailHandler(w http.ResponseWriter, r *h
 	var tokenItem auth.Token
 	err := utils.ConvertBody2JSON(r.Body, &tokenItem)
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Wrong data!",
@@ -169,6 +184,8 @@ func (c *Controller) SendRestorePasswordEmailHandler(w http.ResponseWriter, r *h
 
 	linkData, err := c.Crypto.EncryptTextAES256Base64(fmt.Sprintf(`{"email":"%s", "ttl":%d}`, tokenItem.Email, c.Crypto.PasswordEmailTTL))
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Decrypt error!",
@@ -178,6 +195,8 @@ func (c *Controller) SendRestorePasswordEmailHandler(w http.ResponseWriter, r *h
 
 	err = c.SMTP.SendEmail(tokenItem.Email, `Subject: Смена пароля: `+c.Crypto.RestorePasswordURL+linkData)
 	if err != nil {
+
+		log.Println(err.Error())
 		//fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 		//	false,
 		//	"EMail link error!",
@@ -200,6 +219,8 @@ func (c *Controller) RegistrationHandler(w http.ResponseWriter, r *http.Request)
 	userData := new(models.UserData)
 	err := utils.ConvertBody2JSON(r.Body, &userData)
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Bad data",
@@ -221,6 +242,8 @@ func (c *Controller) RegistrationHandler(w http.ResponseWriter, r *http.Request)
 	//generate password and send it to email
 	password, err := auth.GetNewPassword()
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Password error",
@@ -232,6 +255,8 @@ func (c *Controller) RegistrationHandler(w http.ResponseWriter, r *http.Request)
 
 	userID, errorCode, err := c.Db.SaveUser(userData)
 	if err != nil && errorCode != "22024" {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Save error!",
@@ -243,6 +268,8 @@ func (c *Controller) RegistrationHandler(w http.ResponseWriter, r *http.Request)
 
 		err = c.SMTP.SendEmail(userData.Email, `Subject: Ваш пароль\n`+password)
 		if err != nil {
+
+			log.Println(err.Error())
 			//fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			//	false,
 			//	err.Error(),
@@ -273,6 +300,8 @@ func (c *Controller) GetAuthTokenHandler(w http.ResponseWriter, r *http.Request)
 	var afd auth.LogoPassData
 	err := utils.ConvertBody2JSON(r.Body, &afd)
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Wrong data!",
@@ -282,6 +311,8 @@ func (c *Controller) GetAuthTokenHandler(w http.ResponseWriter, r *http.Request)
 
 	userData, _, err := c.Db.GetUserByAuth(afd.Login, c.Crypto.GetSHA256Bytes(afd.Password))
 	if err != nil {
+
+		log.Println(err.Error())
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"User not found!",
