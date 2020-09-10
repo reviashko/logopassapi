@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	b64 "encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -26,6 +27,16 @@ type CryptoData struct {
 //GetTokenJSON func
 func (c *CryptoData) GetTokenJSON(userID int) string {
 	return fmt.Sprintf(`{"user_id":%d, "ttl":%d}`, userID, time.Now().Unix()+c.TokenTTL)
+}
+
+//CheckConfig func
+func (c *CryptoData) CheckConfig() error {
+
+	if len(c.AES256Key) != 32 {
+		return errors.New("Crypto key is not a multiple of 32")
+	}
+
+	return nil
 }
 
 //CheckAuthToken func

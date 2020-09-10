@@ -28,6 +28,10 @@ func main() {
 	if gonfig.GetConf("config/crypto.json", &cryptoData) != nil {
 		log.Panic("load crypto confg error")
 	}
+	err = cryptoData.CheckConfig()
+	if err != nil {
+		log.Panic(err.Error())
+	}
 
 	smtpData := utils.SMTPData{}
 	if gonfig.GetConf("config/smtp.json", &smtpData) != nil {
