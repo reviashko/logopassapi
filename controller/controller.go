@@ -33,11 +33,11 @@ func (c *Controller) NewRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	//login method - tested
-	router.HandleFunc("/getauthtoken/", c.GetAuthTokenHandler).Methods("POST")
+	router.HandleFunc("/getauthtoken", c.GetAuthTokenHandler).Methods("POST")
 	//registration method -tested
-	router.HandleFunc("/registration/", c.RegistrationHandler).Methods("POST")
+	router.HandleFunc("/registration", c.RegistrationHandler).Methods("POST")
 	//forgot password method (sending special restore link) -tested
-	router.HandleFunc("/getpasswordrestoreemail/", c.SendRestorePasswordEmailHandler).Methods("POST")
+	router.HandleFunc("/getpasswordrestoreemail", c.SendRestorePasswordEmailHandler).Methods("POST")
 	//change password method -tested
 	router.HandleFunc("/changepassword/{token}", c.ChangePasswordHandler).Methods("GET")
 
