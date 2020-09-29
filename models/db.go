@@ -13,11 +13,14 @@ import (
 
 //ConnectionData struct
 type ConnectionData struct {
-	Host     string
-	Port     int
-	Dbname   string
-	User     string
-	Password string
+	Host                   string
+	Port                   int
+	Dbname                 string
+	User                   string
+	Password               string
+	MaxOpenConn            int
+	MaxIdleConn            int
+	MaxConnLifetimeMinutes int
 }
 
 //ToString function
@@ -48,9 +51,9 @@ func InitDB(connectionData ConnectionData) (*DB, error) {
 	}
 
 	//connection pool default settings
-	db.SetMaxOpenConns(25)
-	db.SetMaxIdleConns(25)
-	db.SetConnMaxLifetime(5 * time.Minute)
+	db.SetMaxOpenConns(connectionData.MaxOpenConn)
+	db.SetMaxIdleConns(connectionData.MaxIdleConn)
+	db.SetConnMaxLifetime(time.Duration(connectionData.MaxConnLifetimeMinutes) * time.Minute)
 
 	if err = db.Ping(); err != nil {
 		log.Panic(err)
