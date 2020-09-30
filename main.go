@@ -47,7 +47,7 @@ func main() {
 	router := cntrl.NewRouter()
 
 	//Example. Apply external logic after authtorization token checking
-	externalCallExample := controller.ExternalCall{Cntrl: cntrl, ExternalLogic: &example.ExternalLogicExample{}}
+	externalCallExample := controller.ExternalCall{Cntrl: cntrl, ExternalLogic: &example.ExternalLogicExample{}, FrontSettings: frontSettings}
 	router.HandleFunc("/gettestdatabytoken/", externalCallExample.CheckTokenAndDoFunc).Methods("POST", "OPTIONS")
 
 	log.Fatal(http.ListenAndServe(":8080", router))

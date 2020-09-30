@@ -17,13 +17,14 @@ type ExternalLogic interface {
 //ExternalCall struct
 type ExternalCall struct {
 	Cntrl         Controller
+	FrontSettings auth.FrontSettings
 	ExternalLogic ExternalLogic
 }
 
 //CheckTokenAndDoFunc func
 func (ec *ExternalCall) CheckTokenAndDoFunc(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", ec.FrontSettings.Host)
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 
 	if r.Method == "OPTIONS" {
