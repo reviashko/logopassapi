@@ -20,3 +20,8 @@ type JSONAnswer struct {
 	Reason   string `json:"reason"`
 	Data     string `json:"data"`
 }
+
+//FrontSettings struct
+type FrontSettings struct {
+	Host string `json:"host"`
+}

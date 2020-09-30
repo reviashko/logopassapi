@@ -38,7 +38,12 @@ func main() {
 		log.Panic("load smtp confg error")
 	}
 
-	cntrl := controller.NewController(db, cryptoData, smtpData)
+	frontSettings := auth.FrontSettings{}
+	if gonfig.GetConf("config/front.json", &frontSettings) != nil {
+		log.Panic("load front confg error")
+	}
+
+	cntrl := controller.NewController(db, cryptoData, smtpData, frontSettings)
 	router := cntrl.NewRouter()
 
 	//Example. Apply external logic after authtorization token checking

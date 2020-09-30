@@ -19,14 +19,15 @@ import (
 
 //Controller struct
 type Controller struct {
-	Db     models.Datastore
-	Crypto auth.CryptoData
-	SMTP   utils.SMTPData
+	Db            models.Datastore
+	Crypto        auth.CryptoData
+	SMTP          utils.SMTPData
+	FrontSettings auth.FrontSettings
 }
 
 //NewController func
-func NewController(db models.Datastore, cryptoData auth.CryptoData, smtpData utils.SMTPData) Controller {
-	return Controller{Db: db, Crypto: cryptoData, SMTP: smtpData}
+func NewController(db models.Datastore, cryptoData auth.CryptoData, smtpData utils.SMTPData, frontSettings auth.FrontSettings) Controller {
+	return Controller{Db: db, Crypto: cryptoData, SMTP: smtpData, FrontSettings: frontSettings}
 }
 
 //NewRouter func
@@ -71,7 +72,7 @@ func (c *Controller) CheckCaptcha(requestBody []byte) error {
 //ChangePasswordHandler func
 func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", c.FrontSettings.Host)
 
 	vars := mux.Vars(r)
 	linkData := vars["token"]
@@ -183,7 +184,7 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 //SendRestorePasswordEmailHandler func
 func (c *Controller) SendRestorePasswordEmailHandler(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", c.FrontSettings.Host)
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -237,7 +238,7 @@ func (c *Controller) SendRestorePasswordEmailHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	err = c.SMTP.SendEmail(tokenItem.Email, `Subject: Смена пароля: `+c.Crypto.RestorePasswordURL+linkData)
+	err = c.SMTP.SendEmail(tokenItem.Email, `Subject: Смена пароля: `+c.FrontSettings.Host+c.Crypto.RestorePasswordURL+linkData)
 	if err != nil {
 
 		log.Println(err.Error())
@@ -359,7 +360,7 @@ func (c *Controller) RegistrationHandler(w http.ResponseWriter, r *http.Request)
 //GetAuthTokenHandler func
 func (c *Controller) GetAuthTokenHandler(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", c.FrontSettings.Host)
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
