@@ -4,5 +4,6 @@
     "TokenTTL":3600,
     "PasswordEmailTTL":3600,
     "CaptchaTTL":3600,
+    "CaptchaSize":5,
     "RestorePasswordURL":"http://localhost:3000/auth/changepassword/"
 }

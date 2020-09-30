@@ -40,12 +40,16 @@ func GetJSONAnswer(token string, accepted bool, reason string, jsonData string) 
 func ConvertBody2JSON(data io.Reader, v interface{}) error {
 	body, err := ioutil.ReadAll(data)
 	if err != nil {
-
-		log.Println(err.Error())
 		return err
 	}
 
-	err = json.Unmarshal([]byte(string(body)), v)
+	return ConvertBody2JSONv2(body, v)
+}
+
+//ConvertBody2JSONv2 func
+func ConvertBody2JSONv2(body []byte, v interface{}) error {
+
+	err := json.Unmarshal([]byte(string(body)), v)
 	if err != nil {
 
 		log.Println(err.Error())

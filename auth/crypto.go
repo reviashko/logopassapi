@@ -23,6 +23,7 @@ type CryptoData struct {
 	PasswordEmailTTL   int64  `json:"PasswordEmailTTL"`
 	RestorePasswordURL string `json:"RestorePasswordURL"`
 	CaptchaTTL         int64  `json:"CaptchaTTL"`
+	CaptchaSize        int    `json:"CaptchaSize"`
 }
 
 //GetTokenJSON func

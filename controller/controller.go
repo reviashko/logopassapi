@@ -2,7 +2,9 @@ package controller
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -44,6 +46,28 @@ func (c *Controller) NewRouter() *mux.Router {
 	return router
 }
 
+//CheckCaptcha func
+func (c *Controller) CheckCaptcha(requestBody []byte) error {
+
+	var captcha auth.CAPTCHAData
+	err := utils.ConvertBody2JSONv2(requestBody, &captcha)
+	if err != nil {
+		return errors.New("ОШИБКА В ДАННЫХ CAPTCHA")
+	}
+
+	decryptedCaptchaData, err := c.Crypto.DecryptTextAES256(captcha.CaptchaURL)
+	if err != nil {
+		return errors.New("ОШИБКА В ДАННЫХ CAPTCHA")
+	}
+
+	err = captcha.Check(decryptedCaptchaData)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //ChangePasswordHandler func
 func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -83,7 +107,7 @@ func (c *Controller) ChangePasswordHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	if token.TTL-time.Now().Unix() > 0 {
+	if token.TTL-time.Now().Unix() < 0 {
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
 			false,
 			"Просроченная ссылка!",
@@ -161,8 +185,28 @@ func (c *Controller) SendRestorePasswordEmailHandler(w http.ResponseWriter, r *h
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+			false,
+			"Get request body error!",
+			""))
+		return
+	}
+
+	err = c.CheckCaptcha(body)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+			false,
+			err.Error(),
+			""))
+		return
+	}
+
 	var tokenItem auth.Token
-	err := utils.ConvertBody2JSON(r.Body, &tokenItem)
+	err = utils.ConvertBody2JSONv2(body, &tokenItem)
 	if err != nil {
 
 		log.Println(err.Error())
@@ -216,8 +260,28 @@ func (c *Controller) RegistrationHandler(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+			false,
+			"Get request body error!",
+			""))
+		return
+	}
+
+	err = c.CheckCaptcha(body)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+			false,
+			err.Error(),
+			""))
+		return
+	}
+
 	userData := new(models.UserData)
-	err := utils.ConvertBody2JSON(r.Body, &userData)
+	err = utils.ConvertBody2JSONv2(body, &userData)
 	if err != nil {
 
 		log.Println(err.Error())
@@ -297,8 +361,28 @@ func (c *Controller) GetAuthTokenHandler(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+			false,
+			"Get request body error!",
+			""))
+		return
+	}
+
+	err = c.CheckCaptcha(body)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Fprintf(w, "%s", utils.GetJSONAnswer("",
+			false,
+			err.Error(),
+			""))
+		return
+	}
+
 	var afd auth.LogoPassData
-	err := utils.ConvertBody2JSON(r.Body, &afd)
+	err = utils.ConvertBody2JSONv2(body, &afd)
 	if err != nil {
 
 		log.Println(err.Error())
@@ -321,7 +405,6 @@ func (c *Controller) GetAuthTokenHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	if userData.UserID > 0 {
-
 		token, _ := c.Crypto.EncryptTextAES256Base64(c.Crypto.GetTokenJSON(userData.UserID))
 
 		fmt.Fprintf(w, "%s", utils.GetJSONAnswer(token,
