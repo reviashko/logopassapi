@@ -9,6 +9,25 @@ import (
 	"regexp"
 )
 
+//SortedInt64Insert func
+func SortedInt64Insert(arr []int64, val int64, prevSearchIndex int) []int64 {
+	//i := sort.SearchInts(arr, val)
+	arr = append(arr, 0)
+	copy(arr[prevSearchIndex+1:], arr[prevSearchIndex:])
+	arr[prevSearchIndex] = val
+	return arr
+}
+
+//Int64Contains func
+func Int64Contains(array []int64, item int64) bool {
+	for _, val := range array {
+		if val == item {
+			return true
+		}
+	}
+	return false
+}
+
 //SortedIntInsert func
 func SortedIntInsert(arr []int, val int, prevSearchIndex int) []int {
 	//i := sort.SearchInts(arr, val)

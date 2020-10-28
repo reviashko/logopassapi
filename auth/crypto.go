@@ -44,10 +44,16 @@ func (c *CryptoData) CheckConfig() error {
 //CheckAuthToken func
 func (c *CryptoData) CheckAuthToken(authHeaderValue string) (bool, Token, error) {
 
-	tokenJSON, _ := c.DecryptTextAES256(strings.ReplaceAll(authHeaderValue, `"`, ""))
-
 	var token Token
-	err := json.Unmarshal([]byte(tokenJSON), &token)
+
+	//strings.Replace(authHeaderValue, `"`, "", 2)
+	tokenJSON, err := c.DecryptTextAES256(strings.Replace(authHeaderValue, `"`, "", 2))
+	//tokenJSON, err := c.DecryptTextAES256(strings.ReplaceAll(authHeaderValue, `"`, ""))
+	if err != nil {
+		return false, token, err
+	}
+
+	err = json.Unmarshal([]byte(tokenJSON), &token)
 	if err != nil {
 
 		log.Println(err.Error())
@@ -104,6 +110,12 @@ func (c *CryptoData) EncryptTextAES256Base64(textString string) (string, error) 
 func (c *CryptoData) DecryptTextAES256(encryptedBase64 string) (string, error) {
 
 	key := []byte(c.AES256Key)
+
+	if len(encryptedBase64) < 1 {
+
+		log.Println("empty token")
+		return "", errors.New("empty token")
+	}
 
 	ciphertext, err := b64.RawURLEncoding.DecodeString(encryptedBase64) //[]byte(encryptedText)
 	if err != nil {
